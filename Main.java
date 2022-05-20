@@ -10,10 +10,11 @@ import java.util.HashMap;
 
 class LZW {
   public static String encode(String Filename) {
+    
     System.out.println("encode");
     return Filename;
   }
-
+//1
   public static String decode(String Filename) {
     System.out.println("decode");
     return Filename;
