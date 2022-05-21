@@ -9,15 +9,87 @@ import java.util.HashMap;
  */
 
 class LZW {
-  public static String encode(String Filename) {
-    
-    System.out.println("encode");
-    return Filename;
+  public static String encode(String input) {
+    HashMap <String, Integer> table = new HashMap<String, Integer>();
+    //Values 0-255 from ASCII
+    for(int i=0; i<=255; i++){
+      String ch = "";
+      ch = ch + (char)i;
+      table.put(ch, i);
+    }
+
+    int code = 256;
+    String p="", result="", c="";
+    p=p + input.charAt(0);
+
+    for(int i = 0; i<input.length(); i++){
+      if(i != input.length()-1)
+        c+=input.charAt(i+1);
+      if(c.equals(" ")){//ja c ir " " pievieno p un " " rezultātam
+        //add the space to string
+        result+=(table.get(p)+ " " +table.get(" ")+" ");
+        p="";
+      }
+      else if(c.equals("")){//ja c ir "", pievieno p rezultātam
+        result+=(table.get(p));
+        p="";
+      }
+      else if(table.containsKey(p+c) ){
+        p=p+c;
+      }
+      else{
+        result+=(table.get(p)+" "); //add 2 output
+        table.put(p+c, code);
+        code++;
+        p=c;
+      }
+      c="";
+    }
+    return result;
   }
-//1
-  public static String decode(String Filename) {
-    System.out.println("decode");
-    return Filename;
+
+
+  public static String decode(String input) { //smth not right
+    HashMap <Integer, String> table = new HashMap<Integer, String>();
+    //Values 0-255 from ASCII
+    for(int i=0; i<=255; i++){
+      String ch = "";
+      ch = ch + (char)i;
+      table.put(i, ch);
+    }
+
+    //parse to int
+    String[] stringArray = input.split(" ");
+    int[] array = new int[stringArray.length];
+    for (int i = 0; i < stringArray.length; i++) {
+      array[i] = Integer.parseInt(stringArray[i]);
+  }
+
+
+    int old = array[0], code=256, n;
+    String s=table.get(old), 
+    c="", result="";
+    c+=s.charAt(0);
+    for(int i=0;i<array.length-1; i++){
+      n=array[i+1];
+      if(!table.containsKey(n)){
+        s=table.get(old);
+        s=s+c;
+      }
+      else{
+        s=table.get(n);
+      }
+      System.out.print(s);
+      c="";
+      c+=s.charAt(0);
+      table.put(code, (table.get(old)+c));
+      code++;
+      old=n;
+    }
+
+
+    System.out.println("\ndecode");
+    return input;
   }
 }
 
@@ -89,7 +161,10 @@ class Node {
 class SpiesanasEksperti {
   public static void encode(String Filename){
     //read file
-    String val = LZW.encode(Filename);
+    //dummy text - 1p Lorem
+    String dummy_text= /*"WYS*WYGWYS*WYSWYSG"; */"your compression is your impression by depression.";
+    String val = LZW.encode(dummy_text);
+    LZW.decode(val);
     String HuffmanVal = HuffmanEncoding.encode(val);
     //write file
   }
