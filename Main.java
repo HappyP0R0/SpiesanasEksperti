@@ -63,32 +63,37 @@ class LZW {
     int[] array = new int[stringArray.length];
     for (int i = 0; i < stringArray.length; i++) {
       array[i] = Integer.parseInt(stringArray[i]);
-  }
+    }
 
 
     int old = array[0], code=256, n;
     String s=table.get(old), 
-    c="", result="";
+    c="", result=s;
     c+=s.charAt(0);
     for(int i=0;i<array.length-1; i++){
       n=array[i+1];
-      if(!table.containsKey(n)){
+      if(n==32){
+        result+=" ";
+        s="";
+        c="";
+      }
+      else if(!table.containsKey(n)){
         s=table.get(old);
         s=s+c;
+        result+=s;
       }
       else{
         s=table.get(n);
+        result+=s;
       }
-      System.out.print(s);
-      c="";
-      c+=s.charAt(0);
-      table.put(code, (table.get(old)+c));
-      code++;
+      if(n!=32 && old!=32){
+        c="";
+        c+=s.charAt(0);
+        table.put(code, (table.get(old)+c));
+        code++;
+      }
       old=n;
     }
-
-
-    System.out.println("\ndecode");
     return input;
   }
 }
