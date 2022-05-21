@@ -1,4 +1,8 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PriorityQueue;
+import java.util.Map;
+import java.util.Set;
 /**
  * Krišjanis Elksnītis 8.grupa 211RDB062
  * Andrejs Kopņins 8.grupa 211RDB417
@@ -111,13 +115,15 @@ class HuffmanEncoding {
 }
 
 class HuffmanTree {
-  public HashMap<String, String> table;
-  public HashMap<String, Integer> frequency;
-  public Node root;
+private static Map <Character, String> map = new HashMap<>();
+  static Node root;
+  
+  public HashMap <String, String> table;
+  public HashMap <String, Integer> frequency;
   public int cutoff;
   public int maxFrequency;
 
-  public void HuffmanTree(String[] input){
+  public void HuffmanTree(String[] input) {
     table = null;
     frequency = null;
     root = null;
@@ -125,20 +131,103 @@ class HuffmanTree {
     maxFrequency = 0;
     
   }
-  public String[] encode(){
-    String[] vals = {"C", "B", "A"};
-    return vals;
+  
+  public static String encode(String test) {
+    Map<Character, Integer> freq = new HashMap<>();
+    for (int i = 0; i < test.length(); i++) {
+      if (!freq.containsKey(test.charAt(i))) {
+        freq.put(test.charAt(i), 0);
+      }
+      freq.put(test.charAt(i), freq.get(test.charAt(i)) + 1);
+    }
+    root = createTree(freq);
+
+    setPrefixCodes(root, new StringBuilder());
+    StringBuilder s = new StringBuilder();
+
+    for (int i = 0; i < test.length(); i++) {
+      char c = test.charAt(i);
+      s.append(map.get(c));
+    }
+    return s.toString();
   }
-  private void calculateFrequency(){
+
+  private static void decode(String s) {
+    StringBuilder stringBuilder = new StringBuilder();
+    Node temp = root;
+    for (int i = 0; i < s.length(); i++) {
+      int j = Integer.parseInt(String.valueOf(s.charAt(i)));
+      if (j == 0) {
+        temp = temp.left;
+        if (temp.left == null && temp.right == null) {
+          stringBuilder.append(temp.data);
+          temp = root;
+        }
+      }
+      if (j == 1) {
+        temp = temp.right;
+        if (temp.left == null && temp.right == null) {
+          stringBuilder.append(temp.data);
+          temp = root;
+        }
+      }
+    }
+  }
+  
+  private static Node createTree(Map<Character,Integer> freq) {
+    PriorityQueue<Node> priorityQueue = new PriorityQueue<>();
+    Set<Character> keySet = freq.keySet();
+    for (Character str : keySet) {
+      Node huffmanNode = new Node();
+      huffmanNode.data = str;
+      huffmanNode.frequency = freq.get(str);
+      huffmanNode.left = null;
+      huffmanNode.right = null;
+      priorityQueue.offer(huffmanNode);
+    }
+    assert priorityQueue.size() > 0;
+
+    while (priorityQueue.size() > 1) {
+      Node x = priorityQueue.peek();
+      priorityQueue.poll();
+
+      Node y = priorityQueue.peek();
+      priorityQueue.poll();
+
+      Node sum = new Node();
+      sum.frequency = x.frequency + y.frequency;
+      sum.data = '-';
+
+      sum.left = x;
+      sum.right = y;
+      root = sum;
+
+      priorityQueue.offer(sum);
+    }
+    return priorityQueue.poll();
+  }
     
+  private static void setPrefixCodes(Node node,StringBuilder prefix) { //private void calculateFrequency() {
+    if (node != null) {
+      if (node.left == null && node.right == null) {
+        map.put(node.data, prefix.toString());
+        
+      } else {
+        prefix.append('0');
+        setPrefixCodes(node.left, prefix);
+        prefix.deleteCharAt(prefix.length() - 1);
+
+        prefix.append('1');
+        setPrefixCodes(node.right, prefix);
+        prefix.deleteCharAt(prefix.length() - 1);
+      }
+    }
   }
-  private void createTree(){
-    
+
+  private void createTable() {
   }
-  private void createTable(){
-    
-  }
-  private String[] tableToStringArray(int frequencySize){
+  
+  private String[] tableToStringArray(int frequencySize) {
     String[] vals = {"A", "B", "C"};
     return vals;
   }
@@ -146,10 +235,20 @@ class HuffmanTree {
 }
 
 class Node {
-  public String data, binaryView;
-  int weight;
-  public Node right, left;
+  int frequency;
+  Node left, right;
+  char data;
 
+  public int compare(Node node) {
+    return frequency - node.frequency;
+  }
+
+    private boolean isLeaf() {
+     assert ((left == null) && (right == null)) || ((left != null) && (right != null));
+     return (left == null) && (right == null);
+    }
+
+/*
   public Node(String stringData){
     data = stringData;
     binaryView = "";
@@ -157,6 +256,7 @@ class Node {
     right = null;
     weight = 0;
   }
+*/
 
   public void addWeight(){
     weight++;
