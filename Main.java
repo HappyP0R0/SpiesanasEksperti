@@ -102,7 +102,9 @@ class SpiesanasEksperti {
 }
 
 class Main {
-  public static void main(String[] args) {
+  public static void main(String[] args){
+   System.out.printl("Encode or decode file?") 
+  {
     String val = "encode";
     if (val == "encode") {
       SpiesanasEksperti.encode("filename");
@@ -111,4 +113,5 @@ class Main {
     }
 
   }
+}
 }
