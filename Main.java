@@ -269,6 +269,7 @@ class SpiesanasEksperti {
     String dummy_text= "your compression is your impression by depression.";
     String val = LZW.encode(dummy_text);
     String HuffmanVal = HuffmanEncoding.encode(val);
+    System.out.println(HuffmanVal);
     //write file
   }
 
