@@ -260,9 +260,8 @@ class Node {
 
   public void addWeight(){
     weight++;
-  }
+  }*/
 }
-*/
   
 class SpiesanasEksperti {
   public static void encode(String input){
