@@ -256,28 +256,27 @@ class Node {
     right = null;
     weight = 0;
   }
-*/
+
 
   public void addWeight(){
     weight++;
   }
 }
-
+*/
+  
 class SpiesanasEksperti {
-  public static void encode(String Filename){
+  public static void encode(String input){
     //read file
-    //dummy text - 1p Lorem
-    String dummy_text= /*"WYS*WYGWYS*WYSWYSG"; */"your compression is your impression by depression.";
+    String dummy_text= "your compression is your impression by depression.";
     String val = LZW.encode(dummy_text);
-    LZW.decode(val);
     String HuffmanVal = HuffmanEncoding.encode(val);
     //write file
   }
 
-  public static void decode(String Filename) {
+  public static void decode(String input) {
     //read file
-    String val = LZW.encode(Filename);
-    String HuffmanVal = HuffmanEncoding.encode(val);
+    String val = LZW.decode(input);
+    String HuffmanVal = HuffmanEncoding.decode(val);
     //write file
   }
 }
